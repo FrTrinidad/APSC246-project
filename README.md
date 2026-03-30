@@ -9,7 +9,7 @@ A custom-built handheld retro gaming console powered by a Rasbperry Pi 4. This p
 - Full main menu & setings menu
 - Full Gameplay loop
 - OOP (12 python classes)
-- Deployable on any platform supporting python (Rasbperry Pi, Windows, etc)
+- Deployable on any platform supporting Python (Rasbperry Pi, Windows, etc)
 
 ## Game States
 
