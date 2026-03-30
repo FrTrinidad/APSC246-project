@@ -32,9 +32,9 @@ https://github.com/user-attachments/assets/b38c3fca-3a50-4086-958f-eea68625452c
 
 ## Run
 To run this game on a local computer you will need to do the following
+Without these the pong game never runs
 1. `pip install pygame`
 2. `python game.py`
-Without these the pong game never runs
 
 ## Team
 - **Omar Mohamed** - Software / Game Logic / UI / Audio
@@ -43,10 +43,10 @@ Without these the pong game never runs
 - **Francisco Trinidad** - GitHub / Documentation
 
 ## Sources & Acknowledgments
+Many concepts are inspired from other open-source pong games
 - [Fonts used](https://www.dafont.com/)
 - Sound effects generated using [jsfxr](https://sfxr.me/)
 - Music file taken from [Fesliyan Studios Website](https://www.fesliyanstudios.com/royalty-free-music/download/8-bit-menu/287)
-Many concepts are inspired from other open-source pong games
 
 
 
