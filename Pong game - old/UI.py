@@ -12,8 +12,8 @@ class UI(ABC):
         self.menu_options = []      
         # Currently highlighted option       
         self.selected_index = 0           
-        self.font = pygame.font.SysFont("Arial", 50)
-        self.title_font = pygame.font.SysFont("Arial", 70)
+        self.font = pygame.font.Font("Fonts/aa.ttf", 50)
+        self.title_font = pygame.font.Font("Fonts/aa.ttf", 70)
 
     @abstractmethod
     def render(self, screen, screen_width, screen_height):
@@ -52,7 +52,7 @@ class UI(ABC):
         if start_y is None:
             start_y = screen_height // 2 - (len(self.menu_options) * 30)
         
-        # Loops thro0ugh the menu options
+        # Loops through the menu options
         for i, option in enumerate(self.menu_options):
 
             # Checks if this option is the currently selected one

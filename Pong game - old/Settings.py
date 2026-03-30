@@ -13,14 +13,34 @@ class Settings(UI):
             # Configurable options, gives the default values too
             self.volume = 50          # 0-100
             self.difficulty = 1       # 0 = Easy, 1 = Medium, 2 = Hard
-            self.difficulty_names = ["Easy", "Medium", "Hard"]
-            self.difficulty_speeds = [3, 5, 7]  # Ball Speeds
-            
+            self.difficulty_names = ["EASY", "MEDIUM", "HARD"]
+            self.target_score = 5 # The target score
+            self.bg_speed = 0 # Background speed
+
+            # The background flashing speed control
+            self.bg_speed_names = ["NONE", "SLOW", "MEDIUM", "FAST"]
+
+            # I am not gonna go around and reprogam the background stuff
+            # So the none is just so large it will practically never happen
+            # I mean, if we're counting its 53 years. Have fun playing that long
+            self.bg_speed_values = [100000000000, 60, 30, 15] 
+
+            # Alright, new idea for difficulty
+            # We are now changing three variables to account for it
+            # The difficulty settings are now ball_speed, paddle_height, ai_speed
+            # The player speed is always 5 - AI speed so that you can outrun it
+            self.difficulty_settings = {
+                "EASY":   {"ball_speed": 7, "paddle_height": 80, "ai_speed": 2.5, "reaction_zone": 0.65},
+                "MEDIUM": {"ball_speed": 8, "paddle_height": 60, "ai_speed": 3.5, "reaction_zone": 0.50},
+                "HARD":   {"ball_speed": 9, "paddle_height": 45, "ai_speed": 4.5, "reaction_zone": 0.30},
+            }
+        
+
             # Menu options for this screen
-            self.menu_options = ["Volume", "Difficulty", "Back"]
+            self.menu_options = ["VOLUME", "DIFFICULTY", "TARGET SCORE", "BACKGROUND SPEED", "BACK"]
             
             # Small font for values
-            self.value_font = pygame.font.SysFont("Arial", 40)
+            self.value_font = pygame.font.Font("Fonts/aa.ttf", 14)
 
     def navigate(self, direction):
             #Movement between settings options
@@ -34,7 +54,7 @@ class Settings(UI):
         current_option = self.menu_options[self.selected_index]
         
         # If the option is volume
-        if current_option == "Volume":
+        if current_option == "VOLUME":
             # Increase/decrease volume in by 10
             self.volume += direction * 10
 
@@ -42,12 +62,30 @@ class Settings(UI):
             self.volume = max(0, min(100, self.volume))  
         
         # If the option is difficulty
-        elif current_option == "Difficulty":
+        elif current_option == "DIFFICULTY":
             # Increases the difficulty index (See above)
             self.difficulty += direction
             
             # Sets max and min (Stays between 0 - 2)
             self.difficulty = max(0, min(2, self.difficulty))  # Clamp 0-2
+
+        # If its target score
+        # Changes the target score for match
+        elif current_option == "TARGET SCORE":
+            self.target_score += direction
+            self.target_score = max(1, min(15, self.target_score))  # 1-15 range
+        # If its background speed
+        # Changes the backgrounf flashing speed
+        elif current_option == "BACKGROUND SPEED":
+            self.bg_speed += direction
+            self.bg_speed = max(0, min(3, self.bg_speed))  # 1-4 range
+
+
+    
+    def get_difficulty_settings(self):
+        # Returns the difficulty settings as a dict
+        name = self.difficulty_names[self.difficulty]
+        return self.difficulty_settings[name]
     
     def get_ball_speed(self):
         # Returns the ball speed based on the current difficulty
@@ -80,9 +118,6 @@ class Settings(UI):
     def render(self, screen, screen_width, screen_height):
         # Renders the settings screen
         
-         # Black background
-        screen.fill((0, 0, 0))
-
         # Draws the ttile at the top
         self.render_title(screen, "SETTINGS", screen_width, 80)
         
@@ -107,12 +142,18 @@ class Settings(UI):
                 indicator = "  "
             
             # Get the display text based on option type
-            if option == "Volume":
+            if option == "VOLUME":
                 # Shows the volume value with the arrows around it
-                display_text = f"{indicator}Volume: < {self.volume}% >"
-            elif option == "Difficulty":
+                display_text = f"{indicator}VOLUME: < {self.volume}% >"
+            elif option == "DIFFICULTY":
                 # Displays the difficulty name 
-                display_text = f"{indicator}Difficulty: < {self.difficulty_names[self.difficulty]} >"
+                display_text = f"{indicator}DIFFICULTY: < {self.difficulty_names[self.difficulty]} >"
+            elif option == "TARGET SCORE":
+                # Display target score
+                display_text = f"{indicator}TARGET SCORE: < {self.target_score} >"
+                #Display Background speed
+            elif option == "BACKGROUND SPEED":
+                display_text = f"{indicator}BG SPEED: < {self.bg_speed_names[self.bg_speed]} >"
             else:
                 # The default case for the option without all the extra values
                 display_text = f"{indicator}{option}"
@@ -122,7 +163,7 @@ class Settings(UI):
             screen.blit(text_surf, rect)
         
         # Instructions at the bottom of the screen
-        instructions = "UP/DOWN: Navigate | LEFT/RIGHT: Adjust | ENTER: Select"
+        instructions = "UP/DOWN: NAVIGATE | LEFT/RIGHT: ADJUST | ENTER: SELECT"
 
         # Renders the instructions
         inst_surf = self.value_font.render(instructions, True, (80, 80, 80))

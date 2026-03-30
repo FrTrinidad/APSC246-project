@@ -10,10 +10,10 @@ class EndScreen(UI):
         super().__init__()
 
         # Current screen type
-        self.current_screen = "end"
+        self.current_screen = "END"
 
         # Menu options on the screen
-        self.menu_options = ["Play Again", "Main Menu", "Quit"]
+        self.menu_options = ["PLAY AGAIN", "MAIN MENU", "QUIT"]
 
         # Winner info, initially none
         self.winner = None  # "Player 1", "Player 2", or "AI"
@@ -22,8 +22,8 @@ class EndScreen(UI):
         self.final_score = (0, 0)  # (p1_score, p2_score)
         
         # Fonts for the differnent texts
-        self.winner_font = pygame.font.SysFont("Arial", 80)
-        self.score_font = pygame.font.SysFont("Arial", 50)
+        self.winner_font = pygame.font.Font("Fonts/aa.ttf", 80)
+        self.score_font = pygame.font.Font("Fonts/aa.ttf", 50)
     
     def set_winner(self, winner, p1_score, p2_score):
         # Set the winner information to display.
@@ -38,14 +38,11 @@ class EndScreen(UI):
         # Return the selected menu option
         return self.menu_options[self.selected_index]
     
-    def render(self, screen, screen_width, screen_height):
-        # Render the end screen
-        screen.fill((0, 0, 0))  # Black background
-        
+    def render(self, screen, screen_width, screen_height):        
         # Winner announcement text
         if self.winner:
             # Creates the winner anouncement text
-            winner_text = f"{self.winner} Wins!"
+            winner_text = f"{self.winner} WINS!"
             
             # Renders it as a surface in gold
             winner_surf = self.winner_font.render(winner_text, True, (255, 215, 0))  
@@ -59,7 +56,7 @@ class EndScreen(UI):
         # Final score
 
         # Same general process as before
-        score_text = f"Final Score: {self.final_score[0]} - {self.final_score[1]}"
+        score_text = f"FINAL SCORE: {self.final_score[0]} - {self.final_score[1]}"
         # This is white though not gold
         score_surf = self.score_font.render(score_text, True, (255, 255, 255))
         score_rect = score_surf.get_rect(center=(screen_width // 2, 180))

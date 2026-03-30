@@ -1,10 +1,14 @@
 import pygame
 
+try:
+    from gpiozero import Button
+    GPIO_AVAILABLE = True
+except ImportError:
+    GPIO_AVAILABLE = False
+
 class InputHandler:
     
-    # Handles all input reading and translates them into game actions.
-    # Currently keyboard-only. I'll deal with GPIO support later/when testing on the Pi.
-    
+    # Handles all input reading and translates them into game actions.    
     
     # Action constants
     ACTION_UP = "up"
@@ -48,6 +52,50 @@ class InputHandler:
 
         # Keeps track on whether or not the player wants to quit 
         self.quit_requested = False
+
+        self.gpio_buttons = []
+
+        if GPIO_AVAILABLE:
+            self.setup_gpio()
+
+    def setup_gpio(self):
+        # Your pin mappings
+
+        # We are using a 2D list here since we wanna keep duplicates
+        pin_mappings = [
+            # Buttons
+            (22, self.ACTION_UP),
+            (26, self.ACTION_DOWN),
+            (5, self.ACTION_LEFT),
+            (6, self.ACTION_RIGHT),
+            (27, self.ACTION_BACK),
+            (17, self.ACTION_QUIT),
+            (24, self.ACTION_VOLUME_UP),
+            (25, self.ACTION_VOLUME_DOWN),
+            (3, self.ACTION_CONFIRM),
+            # Joystick
+            (2, self.ACTION_UP),
+            (4, self.ACTION_DOWN),
+            (15, self.ACTION_LEFT),
+            (18, self.ACTION_RIGHT),
+        ]
+        
+        # Loops through each GPIO pin and their actions
+        for pin, action in pin_mappings:
+            try:
+                # Creates a button object for the given GPIO pin
+                # pull_up = true just emans that pin is usually high and low when pressed
+                # bounce time makes sure we dont get multiple triggers from the same press
+                btn = Button(pin, pull_up=True, bounce_time=0.05)
+
+                # Stores the button object in a dict using the action as the key
+                # So we can now easily check which button corresponds to what game action
+                self.gpio_buttons.append((action, btn))
+            except Exception as e:
+                # If theres some error when setting up the pins (so invalid or hardware issues)
+                # Prints a error message
+                print(f"Could not setup GPIO pin {pin}: {e}")
+        
     
     def poll(self):
         # Call once per frame to update input states
@@ -55,6 +103,8 @@ class InputHandler:
         # Clears the last frame's "just pressed" action
         self.just_pressed.clear()
         
+        # KEYBOARD EVENTS
+
         # Loops through the availabe pygame events 
         for event in pygame.event.get():
 
@@ -85,7 +135,30 @@ class InputHandler:
                 # Removes it from the held actions
                 if action:
                     self.pressed_actions.discard(action)
-        
+
+
+        # GPIO BUTTON EVENTS (Has to be on PI)
+
+        # Only checks if the GPIO stuff is availabe
+        if GPIO_AVAILABLE:
+
+            # Loops through all mapped actions and their button objects
+            for action, btn in self.gpio_buttons:
+
+                # Checks if a button is being pressed
+                if btn.is_pressed:
+
+                    # If it wasnt pressed in the last frame
+                    # So it was pressed this frame
+                    if action not in self.pressed_actions:
+                        self.just_pressed.add(action)   # Tracks the new presses
+                    
+                    # Adds the action to the set of currently pressed actions
+                    self.pressed_actions.add(action)
+                else:
+                    # If the button is not pressed we remove it from the pressed set
+                    self.pressed_actions.discard(action)
+
         # Returns the list of actions that were pressed during the frame
         return list(self.just_pressed)
     
@@ -102,5 +175,10 @@ class InputHandler:
         return self.quit_requested
     
     def cleanup(self):
-        # Ignore this for now, its just a placeholder for future GPIO stuff
-        pass
+        if GPIO_AVAILABLE:
+            # Loops through all the button objects that are stored
+            for action, btn in self.gpio_buttons:
+                # Closes the button
+                # Just means that we are releasing the GPIO pin and cleaning up resources
+                # Used when restarting the program/reinitializing GPIO
+                btn.close()
