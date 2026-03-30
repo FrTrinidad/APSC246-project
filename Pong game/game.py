@@ -5,7 +5,7 @@ from AIController import AIController
 from Scoreboard import ScoreBoard
 from menu_class import Menu
 from Settings import Settings         
-from EndScreen import EndScreen        
+from EndScreen import EndScreen       
 from InputHandler import InputHandler 
 from SoundManager import SoundManager 
 import random
