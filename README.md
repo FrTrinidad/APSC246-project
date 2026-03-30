@@ -3,11 +3,13 @@
 A custom-built handheld retro gaming console powered by a Rasbperry Pi 4. This project integrates hardware components such as a display, joystick, and push buttons to create an interactive gaming system. The prototype features Pong as the initial game, with plans to expand functionality and add additional games. The project focuses on hardware–software integration, GPIO input handling, and compact system design.
 
 ## Features
-- 12 python classes (OOP)
-- AI opponent with adjustable difficulty
+- Computer opponent with adjustable difficulty
 - 8 sound effects & music
 - Animated background (speed settings in the settings menu, off by default)
-- Full settings menu
+- Full main menu & setings menu
+- Full Gameplay loop
+- OOP (12 python classes)
+- Deployable on any platform supporting python (Rasbperry Pi, Windows, etc)
 
 ## Game States
 
@@ -15,7 +17,7 @@ A custom-built handheld retro gaming console powered by a Rasbperry Pi 4. This p
 |-------|-------------|
 | Menu | Main menu - Start Game, Settings, Quit |
 | Settings | Adjust volume, difficulty, target score, background speed |
-| Playing | Active gameplay with AI opponent |
+| Playing | Active gameplay with computer opponent |
 | Paused | Game paused (press ESC) |
 | End | Shows winner, options to replay or quit |
 
