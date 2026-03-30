@@ -23,7 +23,7 @@ A custom-built handheld retro gaming console powered by a Rasbperry Pi 4. This p
 Note that only Python 3 & Pygame are required to run the game, the others are for the BoyGame™ console.
 - Python 3 & Pygame
 - Rasbperry Pi 4
-- 7" LCD Display
+- 5" Elecrow Display
 - Joystick & push buttons
 - Speaker
  
