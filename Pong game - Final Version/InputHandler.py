@@ -1,5 +1,8 @@
 import pygame
-import serial
+try:
+    import serial
+except:
+    pass
 
 try:
     from gpiozero import Button
